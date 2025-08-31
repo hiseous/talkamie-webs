@@ -1,0 +1,12 @@
+
+.rs-calendar-time-dropdown-column-title {
+    /* color: #ff0049; */
+    background-color: transparent;
+}
+.rs-calendar-time-dropdown-cell-active {
+    background-color: #ff0049 !important;
+}
+.rs-stack-item button {
+    width: 100%;
+    background-color: #ff0049 !important;
+}

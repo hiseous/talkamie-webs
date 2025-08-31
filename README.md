@@ -7,7 +7,7 @@ This Turborepo starter is maintained by the Turborepo core team.
 Run the following command:
 
 ```sh
-npx create-turbo@latest -e with-tailwind
+npx create-turbo@latest -e talkamie-webs
 ```
 
 ## What's inside?

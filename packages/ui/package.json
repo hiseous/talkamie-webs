@@ -15,10 +15,38 @@
   "scripts": {
     "build:styles": "tailwindcss -i ./src/styles.css -o ./dist/index.css",
     "build:components": "tsc",
+    "build:assets": "cpx \"./src/assets/**/*.!(ts|tsx)\" ./dist/assets",
     "check-types": "tsc --noEmit",
     "dev:styles": "tailwindcss -i ./src/styles.css -o ./dist/index.css --watch",
     "dev:components": "tsc --watch",
-    "lint": "eslint src --max-warnings 0"
+    "dev:assets": "cpx \"./src/assets/**/*.!(ts|tsx)\" ./dist/assets --watch",
+    "lint": "eslint src --max-warnings 0",
+    "watch-assets": "npx tsx ./src/utils/funcs/file-watcher/_index.ts",
+    "watch-types": "tsc --noEmit --watch"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^7.0.2",
+    "@mui/x-date-pickers": "^7.28.3",
+    "@react-oauth/google": "^0.12.1",
+    "@types/swiper": "^5.4.3",
+    "axios": "^1.8.4",
+    "dayjs": "^1.11.13",
+    "install": "^0.13.0",
+    "motion": "^12.6.3",
+    "next": "15.3.0",
+    "npm": "^11.3.0",
+    "postcss": "^8.5.3",
+    "react": "^19.0.0",
+    "react-bootstrap-icons": "^1.11.5",
+    "react-country-state-city": "^1.1.12",
+    "react-dom": "^19.0.0",
+    "react-linkify": "^1.0.0-alpha",
+    "react-toastify": "^11.0.5",
+    "rsuite": "^5.82.0",
+    "socket.io-client": "^4.8.1",
+    "swiper": "^11.2.6"
   },
   "peerDependencies": {
     "react": "^19"
@@ -31,6 +59,12 @@
     "@types/react": "^19.1.0",
     "eslint": "^9.33.0",
     "tailwindcss": "^4.1.5",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "@types/react-dom": "^19",
+    "@types/react-linkify": "^1.0.4",
+    "eslint-config-next": "15.3.0",
+    "postcss": "^8.4.41"
   }
 }

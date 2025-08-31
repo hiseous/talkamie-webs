@@ -1,7 +1,185 @@
 @import "tailwindcss";
 
+@custom-variant hover (&:hover);
 @theme {
-  --color-blue-1000: #2a8af6;
-  --color-purple-1000: #a853ba;
-  --color-red-1000: #e92a67;
+    --breakpoint-xxsm: 240px;
+    --breakpoint-xsm: 360px;
+    --breakpoint-xsmi: 405px;
+    --breakpoint-sm: 480px;
+    --breakpoint-xmd: 600px;
+    --breakpoint-md: 920px;
+    --breakpoint-lg: 976px;
+    --breakpoint-xlg: 1080px;
+    --breakpoint-xl: 1440px;
+    --breakpoint-xxl: 1800px;
+    
+    --color-blackVar1: #121212;
+    --color-blackVar2: #323232;
+    --color-blackVar3: #132222;
+    --color-blackVar4: #565656;
+    --color-blackVar5: #04000F;
+    --color-blackVar6: #25010B;
+    --color-blackVar7: #171717;
+    --color-blackVar8: #282727;
+    --color-blackVar9: #212327;
+
+    --color-blueVar1: #0066FF;
+    --color-blueVar2: #1da1f2;
+    --color-blueVar3: #175CD3;
+    --color-blueVar4: #B2DDFF;
+    --color-blueVar5: #EFF8FF;
+
+    --color-grayVar1: #808F8F;
+    --color-grayVar2: #F0F0F0;
+    --color-grayVar3: #8D8D8D;
+    --color-grayVar4: #999999;
+    --color-grayVar5: #6E6E73;
+    --color-grayVar6: #E9EAEB;
+    --color-grayVar7: #F5F5F5;
+    --color-grayVar8: #838891;
+    --color-grayVar9: #535862;
+    --color-grayVar10: #D3DADD;
+    --color-grayVar11: #484949;
+    --color-grayVar12: #D9D9D9;
+
+    --color-greenVar1: #21C25E;
+    --color-greenVar2: #2ED600;
+    --color-greenVar3: #33B53D;
+    --color-greenVar4: #027A48;
+    --color-greenVar5: #A6F4C5;
+    --color-greenVar6: #F6FEF9;
+
+    --color-pinkVar1: #FFF7F7;
+    --color-pinkVar2: #FFE4E4;
+    --color-pinkVar3: #FFF3F7;
+    --color-pinkVar4: #FFE9E9;
+    --color-pinkVar5: #BD8797;
+    --color-pinkVar6: #FFD4E0;
+    --color-pinkVar7: #FFEBEB;
+
+    --color-redVar1: #FF0049;
+    --color-redVar2: #FFFCFC;
+    --color-redVar3: #DD0140;
+    --color-redVar4: #BE0137;
+    --color-redVar5: #8A0129;
+    --color-redVar6: #55021A;
+    --color-redVar7: #470316;
+    --color-redVar8: #27000B;
+    --color-redVar9: #170107;
+    --color-redVar10: #F66060;
+    --color-redVar11: #FF1E00;
+    --color-redVar12: #FFF0F0;
+
+    --color-whiteVar1: #F9F9F9;
+    --color-whiteVar2: #F0F0F0;
+    --color-whiteVar3: #FCFCFC;
+    --color-whiteVar4: #EFEFEF;
+    --color-whiteVar5: #FBFBFB;
+
+    --color-yellowVar1: #F8C51B;
+    --color-yellowVar2: #B54708;
+    --color-yellowVar3: #FEDF89;
+    
+    --text-xsm: 0.8rem;
+    --text-xxsm: 0.7rem;
+    --text-xxxsm: 0.6rem;
+
+    /* --font-argent: 'Argent';
+    --font-argent-it: 'Argent It';
+    --font-argent-300-it: 'Argent 300 It';
+
+    --font-champ: 'Champ';
+    --font-champ-500: 'Champ 500';
+    --font-champ-900: 'Champ 900';
+
+    --font-goldplay: 'Goldplay';
+    --font-goldplay-500: 'Goldplay 500';
+    --font-goldplay-500-it: 'Goldplay 500 It';
+    --font-goldplay-600: 'Goldplay 600'; */
+}
+
+@layer utilities {
+    .scrollbar-hidden {
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* Internet Explorer 10+ */
+    }
+    .scrollbar-hidden::-webkit-scrollbar {
+      display: none; /* WebKit-based browsers */
+    }
+    .scrollbar-visible {
+      scrollbar-width: inherit; /* Firefox */
+      -ms-overflow-style: auto; /* Internet Explorer 10+ */
+    }
+    .scrollbar-visible::-webkit-scrollbar {
+      display: block; /* WebKit-based browsers */
+    }
+}
+
+html {
+    font-size: 18px;
+}
+input {
+    text-align: inherit;
+}
+
+
+@media screen and (min-width: 500px) {
+    html {
+        font-size: 23px;
+    }
+    /* width */
+    
+    .--textarea-mention textarea::-webkit-scrollbar,
+    .--textarea-mention .__suggestions__list::-webkit-scrollbar,
+    .customScrollbar::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    /* Track */
+    
+    .--textarea-mention textarea::-webkit-scrollbar-track,
+    .--textarea-mention .__suggestions__list::-webkit-scrollbar-track,
+    .customScrollbar::-webkit-scrollbar-track {
+        background-color: rgba(255, 0, 72, 0.03);
+        border-radius: 80px;
+    }
+
+    /* Handle */
+    
+    .--textarea-mention textarea::-webkit-scrollbar-thumb,
+    .--textarea-mention .__suggestions__list::-webkit-scrollbar-thumb,
+    .customScrollbar::-webkit-scrollbar-thumb {
+        background-color: #dad2d4;
+        border-radius: 80px;
+    }
+
+    /* Handle on hover */
+    
+    .--textarea-mention textarea::-webkit-scrollbar-thumb:hover,
+    .--textarea-mention .__suggestions__list::-webkit-scrollbar-thumb:hover,
+    .customScrollbar::-webkit-scrollbar-thumb:hover {
+        background-color: #FF0049;
+    }
+
+
+
+    
+    html.dark .--textarea-mention textarea::-webkit-scrollbar-track,
+    html.dark .--textarea-mention .__suggestions__list::-webkit-scrollbar-track,
+    html.dark .customScrollbar::-webkit-scrollbar-track {
+        background-color: #1D2939;
+    }
+    
+    html.dark .--textarea-mention textarea::-webkit-scrollbar-thumb,
+    html.dark .--textarea-mention .__suggestions__list::-webkit-scrollbar-thumb,
+    html.dark .customScrollbar::-webkit-scrollbar-thumb {
+        background-color: #344054;
+    }
+    
+    html.dark .--textarea-mention textarea::-webkit-scrollbar-thumb:hover,
+    html.dark .--textarea-mention .__suggestions__list::-webkit-scrollbar-thumb:hover,
+    html.dark .customScrollbar::-webkit-scrollbar-thumb:hover {
+        background-color: #667085;
+    }
 }
