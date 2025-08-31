@@ -8,7 +8,7 @@ import { userProps } from "./user";
 import { wsGetSupportMessagesRespData, wsNewSupportMessageRespData, wsSendSupportMessageRespData, wsUpdateSupportMessagesRespData } from "./ws-support-ticket";
 
 export type wsStatus = {
-    state?: 'connected' | 'connecting' | 'disconnected';
+    state?: 'connected' | 'connecting' | 'disconnected' | 'disconnecting';
     initialized?: boolean;
     authed?: boolean;
 };

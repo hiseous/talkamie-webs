@@ -3,11 +3,11 @@
 import { useEffect, useRef } from "react";
 import { wsAuthRequestBody, wsOnMessageCallbacks, wsRefs, wsRequestBody, wsResponse, wsStatus } from "../../utils/types/ws";
 import { __apiUrls } from "../../utils/constants/api-urls";
-import { fromTimestamp } from "../../utils/funcs/time/timestamp";
 import { getLocalUserStorage } from "../local-user-provider/local-user-storage";
 import { useToastMessage } from "../../utils/funcs/hooks/useToastMessage";
 import { useRerenderComponent } from "../../utils/funcs/hooks/useRerenderComponent";
 import { useLocalUser } from "../local-user-provider/useLocalUser";
+import { fromTimestamp } from "../../utils/funcs/time/timestamp";
 
 export const useWebSocket = () => {
     // const localUser = useLocalUser();
@@ -38,7 +38,7 @@ export const useWebSocket = () => {
                     ...refs.current.status,
                     initialized: true,
                 };
-                console.log('---initializing', 'new socket', refs.current.socket?.readyState, WebSocket.OPEN)
+                // console.log('---initializing', 'new socket', refs.current.socket?.readyState, WebSocket.OPEN)
                 reRender.trigger();
                 // setSocket(newSocket);
                 // setStatus(prev => ({
@@ -48,8 +48,8 @@ export const useWebSocket = () => {
             }
         },
         sendToSocket: (body: wsRequestBody) => {
-            console.log('useWebSocket', {body, socket: refs.current.socket, readyState: refs.current.socket?.readyState})
-            if(refs.current.status?.state === 'connected' && refs.current.socket?.readyState === 1){
+            console.log('useWebSocket-sendToSocket', {body, socket: refs.current.socket, readyState: refs.current.socket?.readyState})
+            if(refs.current.status?.state === 'connected'){
                 refs.current.socket?.send(JSON.stringify(body));
             }
             else {
@@ -79,33 +79,33 @@ export const useWebSocket = () => {
             };
             handles.sendToSocket(body);
         },
-        onopen: () => {
-            console.log("websocket connected", fromTimestamp(undefined, true).dateTime.iso, refs.current.socket?.readyState, WebSocket.OPEN);
-            // setStatus(prev => ({
-            //     ...prev,
-            //     state: 'connected',
-            // }));
-            refs.current.status = {
-                ...refs.current.status,
-                state: 'connected',
-            };
-            reRender.trigger();
-        },
-        onclose: () => {
-            console.log("Websocket disconnected!", fromTimestamp(undefined, true).dateTime.iso, refs.current.socket?.readyState, WebSocket.OPEN);
-            // setStatus(prev => ({
-            //     ...prev,
-            //     state: 'disconnected',
-            // }));
-            refs.current.status = {
-                ...refs.current.status,
-                state: 'disconnected',
-            };
-            if(localUserRef.current?.id){
-                handles.initialize();
-            }
-            reRender.trigger();
-        },
+        // onopen: () => {
+        //     console.log("websocket connected", fromTimestamp(undefined, true).dateTime.iso, refs.current.socket?.readyState, WebSocket.OPEN);
+        //     // setStatus(prev => ({
+        //     //     ...prev,
+        //     //     state: 'connected',
+        //     // }));
+        //     refs.current.status = {
+        //         ...refs.current.status,
+        //         state: 'connected',
+        //     };
+        //     reRender.trigger();
+        // },
+        // onclose: () => {
+        //     console.log("Websocket disconnected!", fromTimestamp(undefined, true).dateTime.iso, refs.current.socket?.readyState, WebSocket.OPEN);
+        //     // setStatus(prev => ({
+        //     //     ...prev,
+        //     //     state: 'disconnected',
+        //     // }));
+        //     refs.current.status = {
+        //         ...refs.current.status,
+        //         state: 'disconnected',
+        //     };
+        //     if(localUserRef.current?.id){
+        //         handles.initialize();
+        //     }
+        //     reRender.trigger();
+        // },
         onerror: (error: Event) => {
             // toastMessage.error('some socket error');
             console.log('WebSocket Error: ', error);
@@ -207,33 +207,65 @@ export const useWebSocket = () => {
                 toast.error(response?.message || 'something went wrong on the live socket');
             }
         },
+        getStatusStateFromReadyState: (readyState: number | undefined) => {
+            let state: wsStatus['state'] | undefined;
+            
+            if(readyState === WebSocket.CONNECTING) state = 'connecting';
+            else if(readyState === WebSocket.OPEN) state = 'connected';
+            else if(readyState === WebSocket.CLOSING) state = 'disconnecting';
+            else if(readyState === WebSocket.CLOSED) state = 'disconnected';
+            else state = undefined;
+            
+            return state;
+        },
     };
 
     useEffect(() => {
         // console.log({ini: status.initialized, isSocket: socket ? true: false})
         if(refs.current.status?.initialized && refs.current.socket){
-            refs.current.socket.onopen = handles.onopen;
-            refs.current.socket.onclose = handles.onclose;
+            // refs.current.socket.onopen = handles.onopen;
+            // refs.current.socket.onclose = handles.onclose;
             refs.current.socket.onerror = handles.onerror;
             refs.current.socket.onmessage = handles.onmessage;
         
-            return () => {
-                refs.current.socket?.close();
-            };
+            // return () => {
+            //     refs.current.socket?.close();
+            // };
         }
     }, [refs.current.status?.initialized]);
     useEffect(() => {
-        console.log({status: refs.current.status})
-        if(refs.current.status?.initialized && refs.current.status.state === 'disconnected'){
-            //reconnect;
-            console.log('reconnecting', fromTimestamp(undefined, true).dateTime.iso);
-            refs.current.status.state = 'connecting';
-            handles.initialize();
+        if(typeof refs.current.socket?.readyState === 'number'){
+            const state = handles.getStatusStateFromReadyState(refs.current.socket?.readyState);
+            console.log('socket ready state changed', refs.current.socket?.readyState, state);
+            refs.current.status = {
+                ...refs.current.status,
+                state,
+            };
+            
+            if(state === 'disconnected'){
+                //reconnect;
+                console.log('reconnecting', fromTimestamp(undefined, true).dateTime.iso);
+                refs.current.status.state = 'connecting';
+                handles.initialize();
+            }
+            else if(state === 'connected'){
+                handles.authenticate();
+                reRender.trigger();
+            }
         }
-        else if(refs.current.status?.state === 'connected'){
-            handles.authenticate();
-        }
-    }, [refs.current.status?.state]);
+    }, [refs.current.socket?.readyState]);
+    // useEffect(() => {
+    //     console.log({status: refs.current.status})
+    //     if(refs.current.status?.initialized && refs.current.status.state === 'disconnected'){
+    //         //reconnect;
+    //         console.log('reconnecting', fromTimestamp(undefined, true).dateTime.iso);
+    //         refs.current.status.state = 'connecting';
+    //         handles.initialize();
+    //     }
+    //     else if(refs.current.status?.state === 'connected'){
+    //         handles.authenticate();
+    //     }
+    // }, [refs.current.status?.state]);
     
     return {
         ...handles,
